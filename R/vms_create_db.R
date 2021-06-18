@@ -8,7 +8,7 @@
 #' @description creates an SQLite database for VMS data. It creates also additional tables
 #' that could be used for other purposes of analyzing and cleaning the data.
 #'
-vmsCreateDB <- function(vms_file, add = FALSE){
+vms_create_db <- function(vms_file, add = FALSE){
 
   filename = get_file_name(vms_file)
   filepath = get_file_path(vms_file)
