@@ -1,5 +1,5 @@
 ---
-title: "rmv_demo"
+title: "R MAIA VMS (RMV)"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{rmv_demo}
@@ -17,3 +17,41 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(rmv)
 ```
+
+## VMS Workflow
+1. Edit raw data
+2. Create database
+3. Clean pings
+4. Cut tracks
+5. Interpolate tracks
+6. Assign bathymetry
+
+## Logbook Workflow
+1. Edit raw data
+2. Create database
+3. Metier discovery
+4. Metier editing
+5. Metier classification
+
+## VMS-Logbook Workflow
+1. Logbook-VMS matching
+2. Predict metier
+3. Find fishing points
+4. Gridding
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
