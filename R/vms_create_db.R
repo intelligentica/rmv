@@ -4,9 +4,10 @@
 #' @param add if TRUE append to existent data, FALSE (default)
 #'
 #' @return Doesn't return a value
-#' @export
 #' @description creates an SQLite database for VMS data. It creates also additional tables
 #' that could be used for other purposes of analyzing and cleaning the data.
+#'
+#' @export
 #'
 vms_create_db <- function(vms_file, add = FALSE){
 

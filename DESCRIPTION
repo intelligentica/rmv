@@ -24,4 +24,9 @@ Depends:
     dplyr (>= 1.0.6),
     DBI (>= 1.1.1),
     tools (>= 4.1.0),
-    readr (>= 1.4.0)
+    readr (>= 1.4.0),
+    chron (>= 2.3-56),
+    qpdf,
+    stringr,
+    rgdal,
+    sp

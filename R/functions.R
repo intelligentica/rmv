@@ -156,3 +156,15 @@ get_file_name <- function(file){
 get_file_path <- function(file){
   return(dirname(file))
 }
+
+#' Covert Chron Numeric Date Format to Date Time
+#'
+#' @param x numeric value of date
+#'
+#' @return Date Time
+#' @export
+#'
+fromChronToDate <- function(x){
+  date = format(as.POSIXct((x) * 86400, origin = "1970-01-01", tz = "UTC"), "%m-%d-%Y %H:%M:%S")
+  return(date)
+}

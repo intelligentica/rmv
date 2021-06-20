@@ -6,11 +6,6 @@
 #' @param file_to_append file to append
 #' @param append logical, if TRUE append old file with the new data
 #'
-#' @importFrom readr col_character
-#' @importFrom readr col_date
-#' @importFrom readr col_time
-#' @importFrom readr col_double
-#' @importFrom readr cols
 #' @importFrom tools file_ext
 #'
 #' @return VMS file in rmaiavms format
