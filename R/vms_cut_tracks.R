@@ -4,9 +4,11 @@
 #' @param use_med_out parameter for outlier manipulation
 #' @param use_ud_freq parameter for outlier manipulation
 #' @param vms_db_path VMS SQLite database path
-#' @importFrom DBI dbConnect, dbGetQuery, dbExecute
+#' @importFrom DBI dbConnect dbGetQuery dbExecute dbDisconnect dbWriteTable
 #' @importFrom data.table rbindlist
-#' @importFrom sp spDistsN1, over, SpatialPoints, spDists
+#' @importFrom sp spDistsN1 over SpatialPoints spDists
+#' @importFrom  RSQLite SQLite
+#' @importFrom chron chron
 #' @return This function doesn't have a return value
 #' @export
 #'
