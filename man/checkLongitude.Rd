@@ -12,7 +12,7 @@ checkLongitude(lon, minmax = c(-180, 180))
 \item{minmax}{range of longitude}
 }
 \value{
-the index of each value out of range \link{-180, 180}
+the index of each value out of range.
 }
 \description{
 Check If Longitude is In The Right Interval

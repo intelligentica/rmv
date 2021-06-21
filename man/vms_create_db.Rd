@@ -7,9 +7,9 @@
 vms_create_db(vms_file, add = FALSE)
 }
 \arguments{
-\item{add}{if TRUE append to existent data, FALSE (default)}
+\item{vms_file}{the .vms file}
 
-\item{file}{the .vms file}
+\item{add}{if TRUE append to existent data, FALSE (default)}
 }
 \value{
 Doesn't return a value

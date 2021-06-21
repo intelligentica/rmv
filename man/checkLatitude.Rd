@@ -12,7 +12,7 @@ checkLatitude(lat, minmax = c(-90, 90))
 \item{minmax}{range of latitude}
 }
 \value{
-the index of each value out of range \link{-90, 90}
+the index of each value out of range.
 }
 \description{
 Check If Latitude is In The Right Interval

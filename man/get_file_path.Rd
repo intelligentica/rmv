@@ -10,7 +10,7 @@ get_file_path(file)
 \item{file}{complete path with name of file}
 }
 \value{
-
+file path
 }
 \description{
 Extract the file directory from a path
