@@ -19,14 +19,13 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-Depends: 
-    RSQLite (>= 2.2.7),
-    dplyr (>= 1.0.6),
-    DBI (>= 1.1.1),
-    tools (>= 4.1.0),
-    readr (>= 1.4.0),
-    chron (>= 2.3-56),
-    qpdf,
+Imports: 
+    RSQLite,
+    DBI,
+    tools,
+    chron,
     stringr,
     rgdal,
-    sp
+    sp,
+    data.table,
+    magrittr
