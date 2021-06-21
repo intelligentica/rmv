@@ -12,7 +12,7 @@ checkMissing <- function(vec){
 #' Check If Latitude is In The Right Interval
 #' @param lat latitude in decimal format
 #' @param minmax range of latitude
-#' @return the index of each value out of range [-90, 90]
+#' @return the index of each value out of range.
 #'
 #' @export
 #'
@@ -30,7 +30,7 @@ checkLatitude <- function(lat, minmax = c(-90, 90)){
 #'
 #' @param lon longitude in decimal format
 #' @param minmax range of longitude
-#' @return the index of each value out of range [-180, 180]
+#' @return the index of each value out of range.
 #'
 #' @export
 #'
@@ -98,7 +98,7 @@ checkSimulaneousOutOfRange <- function(lat,lon, latzone = c(-90,90),longzone = c
 #' @param date date value
 #' @param time time value
 #' @return chron datetime value
-#'
+#' @importFrom chron chron
 #' @export
 #'
 dateTimeConverter <- function(date,time){
@@ -137,6 +137,7 @@ lastIndexOf <- function(string, character){
 #' @param file complete path with name of file
 #' @return file name
 #' @description Extract the file name from a path
+#' @importFrom stringr str_sub
 #' @export
 #'
 get_file_name <- function(file){
@@ -149,7 +150,7 @@ get_file_name <- function(file){
 #' Extract File Directory
 #'
 #' @param file complete path with name of file
-#' @return
+#' @return file path
 #' @description Extract the file directory from a path
 #' @export
 #'
@@ -168,3 +169,25 @@ fromChronToDate <- function(x){
   date = format(as.POSIXct((x) * 86400, origin = "1970-01-01", tz = "UTC"), "%m-%d-%Y %H:%M:%S")
   return(date)
 }
+
+
+#' Longitude to UTM
+#' @param long longitude
+#' @return UTM values
+#' @export
+#'
+long2UTM <- function(long) {
+  (floor((long + 180) / 6) %% 60) + 1
+}
+
+
+# Original spline basis
+H0 <- function(x) return(2 * x^3 - 3 * x^2 + 1)
+H1 <- function(x) return(-2 * x^3 + 3 * x^2)
+H2 <- function(x) return(x^3 - 2 * x^2 + x)
+H3 <- function(x) return(x^3 - x^2)
+# Derivatives
+dH0 <- function(x) return(6 * x^2 - 6 * x)
+dH1 <- function(x) return(-6 * x^2 + 6 * x)
+dH2 <- function(x) return(3 * x^2 - 4 * x + 1)
+dH3 <- function(x) return(3 * x^2 - 2 * x)
