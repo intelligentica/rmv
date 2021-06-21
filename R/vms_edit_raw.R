@@ -5,9 +5,11 @@
 #' @param longzone longitude range of the studied zone
 #' @param file_to_append file to append
 #' @param append logical, if TRUE append old file with the new data
-#'
 #' @importFrom tools file_ext
-#'
+#' @importFrom chron chron
+#' @importFrom utils read.csv read.table write.table
+#' @importFrom graphics boxplot
+#' @importFrom stats median quantile
 #' @return VMS file in rmaiavms format
 #' @export
 #'
