@@ -6,8 +6,10 @@
 #' @param inHarbBuff distance from harbour that considered in harbour
 #' @importFrom rgdal readOGR
 #' @importFrom RSQLite SQLite
-#' @importFrom DBI dbConnect, dbGetQuery, dbExecute, dbWriteTable, dbDisconnect
-#' @importFrom sp spDistsN1, over, SpatialPoints, spDists
+#' @importFrom DBI dbConnect dbGetQuery dbExecute dbWriteTable dbDisconnect
+#' @importFrom sp spDistsN1 over SpatialPoints spDists
+#' @importFrom chron chron
+#' @importFrom magrittr %>%
 #' @return Edit the database warn table
 #' @export
 #'
