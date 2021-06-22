@@ -1,5 +1,5 @@
 
-#' Title
+#' Joining VMS and MAIA data
 #'
 #' @param logbook_db_path MAIA database path
 #' @param vms_db_path VMS database path
@@ -21,7 +21,7 @@
 #' @return no return
 #' @export
 #'
-joinVMSandMAIA <- function(logbook_db_path, vms_db_path){
+maia_vms_join <- function(logbook_db_path, vms_db_path){
 
   connvms = DBI::dbConnect(RSQLite::SQLite(), vms_db_path)
   connlb = DBI::dbConnect(RSQLite::SQLite(), logbook_db_path)
