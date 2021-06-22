@@ -191,3 +191,117 @@ dH0 <- function(x) return(6 * x^2 - 6 * x)
 dH1 <- function(x) return(-6 * x^2 + 6 * x)
 dH2 <- function(x) return(3 * x^2 - 4 * x + 1)
 dH3 <- function(x) return(3 * x^2 - 2 * x)
+
+
+
+o_Tps <- function(x, Y, m = NULL, p = NULL, scale.type = "range",
+                  lon.lat = FALSE, miles = TRUE, ...) {
+  x <- as.matrix(x)
+  d <- ncol(x)
+  if (is.null(p)) {
+    if (is.null(m)) {
+      m <- max(c(2, ceiling(d / 2 + 0.1)))
+    }
+    p <- (2 * m - d)
+    if (p <= 0) {
+      stop(" m is too small  you must have 2*m -d >0")
+    }
+  }
+  Tpscall <- match.call()
+  if (!lon.lat) {
+    Tpscall$cov.function <- "Thin plate spline radial basis functions (Rad.cov) "
+    Krig(x, Y,
+         cov.function = Rad.cov, m = m, scale.type = scale.type,
+         p = p, GCV = TRUE, ...
+    )
+  }
+  else {
+    # use different coding of the radial basis fucntions to use with great circle distance.
+    Tpscall$cov.function <- "Thin plate spline radial basis functions (RadialBasis.cov) using great circle distance "
+    Krig(x, Y,
+         cov.function = stationary.cov, m = m, scale.type = scale.type,
+         GCV = TRUE, cov.args = list(
+           Covariance = "RadialBasis",
+           M = m, dimension = 2, Distance = "rdist.earth",
+           Dist.args = list(miles = miles)
+         ), ...
+    )
+  }
+}
+
+
+recu_dep <- function(xmin, xmax, ymin, ymax, resolut = 2, the_db = "") {
+  if (the_db != "") {
+    co_ce <- DBI::dbGetQuery(conn, paste0("select count(*) from intrp where LON > ",xmin,
+                                     " and LON < ",xmax," and LAT > ",ymin," and LAT < ", ymax))
+
+    if (co_ce[1, 1] == 0) {
+      cat("\n   -     Skipped block: x(", xmin, ",", xmax, ")*y(", ymin, ",", ymax, ")     -\n", sep = "")
+    } else {
+      xrange <- c(xmin, xmax)
+      yrange <- c(ymin, ymax)
+      # 	map("worldHires", xlim = xrange, ylim = yrange, bg = "darkorange2", col = "black", fill = T)
+      # 	map.axes()
+      l_x <- xmax - xmin
+      l_y <- ymax - ymin
+      if (l_x <= 0.25 | l_y <= 0.25) {
+        cat("\n   -     New valid block: x(", xmin, ",", xmax, ")*y(", ymin, ",", ymax, ")     -\n", sep = "")
+        deppoi <- DBI::dbGetQuery(conn, paste0("select ROWID, * from intrp where LON > ",xmin,
+                                          " and LON < ",xmax," and LAT > ",ymin," and LAT < ",ymax))
+
+        cat("\n   -     Analyzing ", nrow(deppoi), " points     -\n\n", sep = "")
+
+        bat_blo <- marmap::getNOAA.bathy(xmin - 0.1,
+                                 xmax + 0.1,
+                                 ymin - 0.1,
+                                 ymax + 0.1,
+                                 resolution = resolut
+        )
+        plot(bat_blo, image = T)
+        points(deppoi[, "LON"], deppoi[, "LAT"], pch = 20, col = "firebrick")
+
+        xlon <- rep(as.numeric(rownames(bat_blo)), length(as.numeric(colnames(bat_blo))))
+        ylat <- rep(as.numeric(colnames(bat_blo)), each = length(as.numeric(rownames(bat_blo))))
+        zdep <- as.numeric(bat_blo)
+        cat("\n   -     Calculating Spline...     -", sep = "")
+        SplineD <- o_Tps(cbind(xlon, ylat), zdep, lon.lat = TRUE)
+        rm(bat_blo, zdep, xlon, ylat)
+        cat("\n   -     Predicting depth", sep = "")
+        if (nrow(deppoi) <= 10000) {
+          cat(" ", sep = "")
+          dept <- as.numeric(predict(SplineD, deppoi[, c("LON", "LAT")]))
+          dep_v <- as.data.frame(cbind(deppoi[, "rowid"], deppoi[, "I_NCEE"], dept))
+          DBI::dbWriteTable(conn,name = "p_depth",value = dep_v, append = T, row.names = F)
+          rm(dept, dep_v)
+          gc()
+        } else {
+          nPin <- ceiling(nrow(deppoi) / 10000)
+          for (pi in 1:nPin)
+          {
+            cat(".", sep = "")
+            r1 <- 10000 * (pi - 1) + 1
+            r2 <- min(nrow(deppoi), r1 + 10000 - 1)
+            dept <- as.numeric(predict(SplineD, deppoi[r1:r2, c("LON", "LAT")]))
+            dep_v <- as.data.frame(cbind(deppoi[r1:r2, "rowid"], deppoi[r1:r2, "I_NCEE"], dept))
+            DBI::dbWriteTable(conn,name = "p_depth",value = dep_v, append = T, row.names = F)
+            rm(dept, dep_v)
+            gc()
+          }
+        }
+        cat(" - Completed!     -\n", sep = "")
+        rm(SplineD)
+        gc()
+      } else {
+        xmin_2 <- xmin + ((xmax - xmin) / 2)
+        ymin_2 <- ymin + ((ymax - ymin) / 2)
+        cat("\n   -     Splitting block...     -\n", sep = "")
+        recu_dep(xmin, xmin_2, ymin, ymin_2, resolut = resolut, the_db)
+        recu_dep(xmin_2, xmax, ymin, ymin_2, resolut = resolut, the_db)
+        recu_dep(xmin, xmin_2, ymin_2, ymax, resolut = resolut, the_db)
+        recu_dep(xmin_2, xmax, ymin_2, ymax, resolut = resolut, the_db)
+      }
+    }
+  } else {
+    cat("\n\n   -     Error! Bad Database File      -\n", sep = "")
+  }
+}
