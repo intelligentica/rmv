@@ -28,4 +28,12 @@ Imports:
     rgdal,
     sp,
     data.table,
-    magrittr
+    magrittr,
+    maps,
+    grDevices,
+    marmap,
+    fields,
+    utils,
+    dplyr,
+    tidyr,
+    intervals
